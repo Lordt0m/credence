@@ -1,18 +1,24 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 6 complete (Public CI and release verification).
+- Phase: Phase 7 complete (Public GitHub publication and release verified).
 - Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
+- Remote: `https://github.com/Lordt0m/credence`.
 
 ## Last verified result
-- 27 automated tests passing across multiple execution environments (active `.venv` and an isolated clean temporary virtual environment).
-- CI workflow `.github/workflows/ci.yml` authored targeting official actions (`actions/checkout@v4`, `actions/setup-python@v5`), Python 3.13 on both Ubuntu and Windows matrix, executing test suite, verifying both CLI entry points, and enforcing clean git state.
-- `git diff --check` passed cleanly with no whitespace or encoding anomalies.
-- Repository checked for secrets, absolute paths, and stale artifacts. Working tree is clean.
+- 27 automated unit, integration, and demonstration tests passing locally and in public CI.
+- GitHub Actions CI matrix (Python 3.13 on `ubuntu-latest` and `windows-latest`) passing green (Run ID: 35417227728).
+- Complete MVP acceptance gate met:
+  1. Standard library runtime with zero external runtime dependencies.
+  2. Strict header contract validation, column permutation tolerance, and physical line tracking.
+  3. All field validations (ISO date, type normalization, positive decimal amounts, required strings, optional reference) and whole-file duplicate rejection verified.
+  4. Staged output safety, collision prevention (exit code 2), and simulated write cleanup verified.
+  5. Deterministic outputs (`clean-transactions.csv`, `validation-errors.csv`, `summary.json`) matching canonical fixtures byte-for-byte.
+  6. Clean CLI exit codes (0, 1, 2) without Python tracebacks.
+  7. Public documentation, specifications, ADRs, workflows, and demonstration datasets aligned.
 
 ## Known risks
-- GitHub CLI (`gh`) is not installed locally; remote publication will be handled via Git and GitHub API.
+- None identified. All MVP requirements and completion criteria are satisfied and evidenced.
 
 ## Next safe action
-- Commit Phase 6.
-- Begin Phase 7: Publish to GitHub (`https://github.com/Lordt0m/credence`), push `main`, verify public CI run, and compile the final return report.
+- Deliver final primary-builder handoff report.

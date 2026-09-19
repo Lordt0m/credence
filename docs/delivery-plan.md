@@ -68,7 +68,7 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit Phase 6.
 
 ## Phase 7: GitHub publication and release
-- [ ] Create public GitHub repository `Lordt0m/credence`.
-- [ ] Push `main` branch to remote.
-- [ ] Verify GitHub Actions run passes cleanly.
-- [ ] Compile final primary-builder handoff report.
+- [x] Create public GitHub repository `Lordt0m/credence`.
+- [x] Push `main` branch to remote.
+- [x] Verify GitHub Actions run passes cleanly.
+- [x] Compile final primary-builder handoff report.

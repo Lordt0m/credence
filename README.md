@@ -181,7 +181,7 @@ Because line 9 has issues, it is excluded from `clean-transactions.csv` and its 
 - **Zero runtime dependencies**: Built exclusively on the Python 3.13 standard library (`argparse`, `csv`, `dataclasses`, `datetime`, `decimal`, `enum`, `json`, `pathlib`, `tempfile`, `shutil`). See [ADR 0001](docs/adr/0001-standard-library-runtime.md).
 - **Exact decimal arithmetic**: Never uses `float` for money. Amounts and totals are parsed and aggregated using `decimal.Decimal` and serialized as two-decimal strings (`"0.00"`).
 - **Whole-file duplicate rejection**: Duplicate transaction IDs cannot be safely resolved by accepting the first record. All instances sharing an ID are rejected. See [ADR 0002](docs/adr/0002-whole-file-duplicate-validation.md).
-- **Staged output safety, collision prevention, and rollback**: Credence refuses to overwrite existing target files in `--output-dir`. Artifacts are staged in an isolated temporary directory and published to the destination, with best-effort rollback of newly moved artifacts upon handled operational errors. See [ADR 0003](docs/adr/0003-safe-deterministic-staged-output.md).
+- **Staged output safety, collision refusal, and publication rollback**: Target reports are completely generated in an isolated temporary staging directory before publication. Pre-flight checks refuse to overwrite existing target files in `--output-dir`. If an operational failure occurs during publication, Credence triggers best-effort rollback of newly published files while preserving pre-existing unrelated files. Multi-file filesystem crash consistency across power loss, OS crashes, or SIGKILL is not guaranteed. See [ADR 0003](docs/adr/0003-safe-deterministic-staged-output.md).
 
 ---
 
@@ -200,7 +200,7 @@ The test suite covers:
 - Row width mismatches and error accumulation.
 - Boundary conditions for decimal amounts, dates (including leap years), transaction types, and required text fields.
 - Whole-file duplicate ID invalidation.
-- Staged atomic output safety, collision handling (exit code `2`), and simulated write failure cleanup.
+- Staged output generation, collision refusal (exit code `2`), publication rollback on handled operational errors, and preserving unrelated files.
 - Deterministic repeated execution and byte-for-byte reconciliation against canonical fixtures.
 
 ---

@@ -44,7 +44,7 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Implement deterministic `validation-errors.csv` writer sorted by line number and field.
 - [x] Implement `summary.json` generation with exact decimal serialization as strings, sorted categories, and correct valid-only aggregates.
 - [x] Implement output safety: check for existing target artifacts before execution; abort with exit code 2 if collision detected.
-- [x] Implement staged output writing to guarantee atomic artifact publishing and cleanup on error.
+- [x] Implement staged output writing with pre-flight collision refusal and best-effort publication rollback on handled operational errors.
 - [x] Implement terminal summary output matching specification.
 - [x] Implement exit code semantics: 0 for all-valid, 1 for row errors, 2 for file/safety errors.
 - [x] Ensure absence of Python tracebacks for all operational errors.

@@ -248,3 +248,57 @@ def test_cli_unexpected_programming_defect_surfaces_traceback(tmp_path):
     # Traceback must remain visible
     assert "Traceback (most recent call last)" in res.stderr
     assert "ZeroDivisionError: simulated unexpected programming bug" in res.stderr
+
+
+def test_publication_unexpected_defect_propagates_without_conversion(tmp_path, monkeypatch):
+    import shutil
+    import credence.reporting
+
+    output_dir = tmp_path / "defect_publication_test"
+    output_dir.mkdir(parents=True)
+
+    result = ValidationResult(processed_rows=1, valid_rows=1)
+    result.valid_transactions.append(
+        Transaction("T1", date(2026, 1, 1), TransactionType.INCOME, "Sales", "Desc", Decimal("50.00"), "")
+    )
+    summary = calculate_summary("test.csv", result)
+
+    def buggy_move(src, dst):
+        raise TypeError("Unexpected non-OSError defect during publication")
+
+    monkeypatch.setattr(credence.reporting.shutil, "move", buggy_move)
+
+    # Must raise TypeError directly and NOT convert into OutputSafetyError
+    with pytest.raises(TypeError, match="Unexpected non-OSError defect during publication") as exc_info:
+        stage_and_publish_reports(output_dir, result, summary)
+
+    assert not isinstance(exc_info.value, OutputSafetyError)
+
+
+def test_cli_publication_defect_surfaces_traceback(tmp_path):
+    input_csv = tmp_path / "valid.csv"
+    input_csv.write_text(
+        "transaction_id,date,type,category,description,amount,reference\n"
+        "TX1,2026-01-01,income,Sales,Widget,100.00,REF1\n",
+        encoding="utf-8"
+    )
+    output_dir = tmp_path / "defect_cli_out"
+
+    runner_code = (
+        "import sys, shutil\n"
+        "from unittest.mock import patch\n"
+        "import credence.cli\n"
+        "def buggy_move(*args, **kwargs):\n"
+        "    raise TypeError('Simulated publication defect')\n"
+        "with patch('credence.reporting.shutil.move', side_effect=buggy_move):\n"
+        f"    sys.exit(credence.cli.main(['check', r'{str(input_csv)}', '-o', r'{str(output_dir)}']))\n"
+    )
+    cmd = [sys.executable, "-c", runner_code]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+
+    # Must NOT be trapped as exit code 2
+    assert res.returncode != 2
+    assert res.returncode != 0
+    # Traceback must remain visible
+    assert "Traceback (most recent call last)" in res.stderr
+    assert "TypeError: Simulated publication defect" in res.stderr

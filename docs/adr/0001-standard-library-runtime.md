@@ -15,7 +15,7 @@ Credence will use strictly the Python 3.13 standard library for all runtime func
 - `enum` for typed enumerations (`TransactionType`).
 - `json` for serializing summary reports.
 - `pathlib` for cross-platform filesystem path manipulation.
-- `tempfile` and `shutil` for staged atomic output writing.
+- `tempfile` and `shutil` for staged output generation and publication rollback.
 
 External dependencies are restricted entirely to development:
 - `pytest` for test execution, parameterization, and assertions.

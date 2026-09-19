@@ -12,7 +12,7 @@ A tool that produces multiple output artifacts (`clean-transactions.csv`, `valid
 Credence adopts a strict output safety and determinism protocol:
 
 1. **Pre-flight collision check**: Before any row parsing or processing begins, Credence checks whether any of the three target files exist in the specified `--output-dir`. If any target artifact already exists, the process fails immediately with exit code `2` and does not alter the directory.
-2. **Staged writing via temporary directory and publication rollback**: Artifacts are generated inside an isolated temporary directory (`tempfile.TemporaryDirectory`). Only after all three artifacts are successfully constructed, formatted, and closed are they published to `--output-dir`. If publication of a subsequent file fails due to a handled exception (such as an `OSError`), Credence performs best-effort rollback by removing any target artifacts newly published during that run, ensuring no partial set of Credence outputs remains. Any pre-existing unrelated files in the output directory remain untouched.
+2. **Staged writing via temporary directory and publication rollback**: Artifacts are generated inside an isolated temporary directory (`tempfile.TemporaryDirectory`). Only after all three artifacts are successfully constructed, formatted, and closed are they published to `--output-dir`. If publication of a subsequent file fails due to a handled operational exception (such as an `OSError`), Credence triggers best-effort rollback by removing any target artifacts newly published during that run, while preserving any pre-existing unrelated files in the output directory.
 3. **Safety boundary and non-guarantees**: The application-level safety guarantees apply to handled operational exceptions and pre-flight collision prevention. Credence does not provide multi-file filesystem-level crash consistency across sudden OS crashes, power loss, or unhandled SIGKILL signals.
 4. **Deterministic output generation**:
    - `clean-transactions.csv` maintains original source row ordering with canonical column order.
@@ -24,10 +24,10 @@ Credence adopts a strict output safety and determinism protocol:
 
 ### Positive
 - Prevents accidental overwriting of existing target artifacts via pre-flight checks.
-- Handled operational failures during processing or publication do not leave partial or orphaned Credence artifacts in the output directory.
+- Handled operational publication failures trigger best-effort rollback of newly published target artifacts.
 - Idempotent and deterministic: identical inputs produce byte-for-byte identical output files.
 - Version-control friendly for automated reporting pipelines.
 
 ### Negative
 - Users must explicitly supply a fresh or collision-free directory for `--output-dir` (overwrite flag is intentionally excluded in MVP).
-- File operations across distinct filesystems/devices may involve copies rather than atomic inode renames, mitigated by application-level rollback for handled exceptions.
+- Multi-file publication moves files sequentially; while handled exceptions trigger best-effort rollback, sudden termination (power loss, OS crashes, SIGKILL) cannot guarantee multi-file filesystem crash consistency.

@@ -22,7 +22,7 @@ The tool emphasizes deterministic file handling, strict decimal arithmetic, whol
 3. **Strict decimal arithmetic**: Never use binary floating-point (`float`) for monetary amounts or summary totals. Always use Python's `decimal.Decimal`.
 4. **Physical source line preservation**: Line numbers reported in error logs and diagnostics must match the 1-indexed physical line numbers of the source file.
 5. **Whole-file duplicate invalidation**: Every occurrence of a duplicated transaction identifier (case-insensitive) is invalid, including the first occurrence.
-6. **Safe and atomic output handling**: Never overwrite existing target artifacts in an output directory without explicit intent (overwriting is excluded in MVP). When writing outputs, use staged writing so a failure leaves no mixture of stale or partial files.
+6. **Staged output safety and publication rollback**: Never overwrite existing target artifacts in an output directory without explicit intent (overwriting is excluded in MVP). Reports are completely generated in temporary staging before publication. Handled operational publication failures trigger best-effort rollback of artifacts newly published during that run, while preserving unrelated existing files. Multi-file filesystem crash consistency across power loss, OS crashes, or SIGKILL is not guaranteed.
 7. **Clean CLI boundary**: Normal operational errors (missing files, malformed headers, invalid rows) must produce clean stderr/stdout diagnostics and documented exit codes (0, 1, 2) without raw Python tracebacks. Uncaught bugs remain visible in development.
 8. **Cross-platform paths**: Support both Windows (`\`) and POSIX (`/`) paths consistently.
 

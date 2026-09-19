@@ -80,8 +80,13 @@ def stage_and_publish_reports(
     summary: FinancialSummary,
 ) -> None:
     """
-    Stage artifacts in a temporary directory and atomically publish to output_dir.
-    Guarantees no partial or mixed artifacts on write failure.
+    Generate reports completely in a temporary staging directory before publication.
+    If an operational failure (OSError) occurs during publication, triggers best-effort
+    rollback of artifacts newly published during that run, while leaving existing
+    unrelated files untouched.
+
+    Credence does not guarantee multi-file filesystem crash consistency across power
+    loss, OS crashes, or SIGKILL.
     """
     check_output_safety(output_dir)
 
@@ -107,7 +112,7 @@ def stage_and_publish_reports(
                 dst_file = output_dir / name
                 shutil.move(str(src_file), str(dst_file))
                 published_files.append(dst_file)
-        except Exception as exc:
+        except OSError as exc:
             for published in published_files:
                 try:
                     if published.exists():

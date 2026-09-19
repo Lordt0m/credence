@@ -1,25 +1,20 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Independent review repairs complete and verified in public CI.
+- Phase: Final review repairs implemented and verified locally; awaiting public push and CI confirmation.
 - Repository: repository root on branch `main`.
 - Remote: `https://github.com/Lordt0m/credence`.
 
 ## Last verified result
-- 33 automated unit, integration, and demonstration tests passing locally across Python 3.13 and in public CI.
-- GitHub Actions CI matrix (Python 3.13 on `ubuntu-latest` and `windows-latest`) passing green (Run ID: 35431469572).
-- All independent review findings addressed test-first:
-  1. Publication rollback implemented: Handled publication failures roll back all newly published target artifacts while leaving pre-existing unrelated files untouched.
-  2. Documentation updated to specify exact guarantees (staged writing, collision refusal, best-effort rollback on handled exceptions) and explicit boundaries (no claims of multi-file POSIX crash consistency across power loss or SIGKILL).
-  3. Strict CSV quoting enforced: Structurally unparseable CSV quoting triggers concise `FileValidationError`, exit code `2`, and zero output artifacts.
-  4. Exact header validation enforced: Rejects leading and trailing whitespace around column names while preserving column permutation support.
-  5. CLI exception handling narrowed to expected operational errors (`FileValidationError`, `OutputSafetyError`, `OSError`, `UnicodeDecodeError`, `csv.Error`), ensuring programming defects surface tracebacks.
-  6. Unused `SourceRow.is_blank` removed from models and documentation.
-  7. GitHub Actions workflow modernized to official `v7` actions (`actions/checkout@v7`, `actions/setup-python@v7`), eliminating Node.js 20 deprecation warnings.
-- Fictional demonstration fixture validation and canonical byte-for-byte reconciliation confirmed.
+- 35 automated unit, integration, and demonstration tests passing locally across Python 3.13.
+- Final review blockers resolved test-first:
+  1. Exception handling around artifact publication in `src/credence/reporting.py` narrowed strictly from `Exception` to `OSError`. Handled operational publication failures trigger rollback of newly published files while preserving unrelated existing files; unexpected programming defects propagate with traceback.
+  2. Stale claims of atomic multi-file publication removed repository-wide (`README.md`, `src/credence/reporting.py`, `AGENTS.md`, `docs/delivery-plan.md`, `docs/adr/0001-standard-library-runtime.md`, `docs/adr/0003-safe-deterministic-staged-output.md`).
+  3. Exact contract consistently documented: complete generation in staging before publication, pre-flight collision refusal, best-effort rollback on handled operational errors, preservation of unrelated existing files, and explicit non-guarantee of multi-file crash consistency across power loss, OS crashes, or SIGKILL.
+- Both CLI console script (`credence`) and module (`python -m credence`) entry points verified on demonstration data.
 
 ## Known risks
-- Multi-file filesystem consistency across sudden power loss, kernel panics, or SIGKILL is outside standard application-level boundaries without transaction-capable filesystem support; this boundary is explicitly documented.
+- Multi-file filesystem consistency across sudden power loss, kernel panics, or SIGKILL is outside standard application-level boundaries without transaction-capable filesystem support; this boundary is explicitly documented across ADRs and specification.
 
 ## Next safe action
-- Ready for reviewer evaluation and release tagging.
+- Push focused commit to `origin/main` and monitor GitHub Actions CI matrix.

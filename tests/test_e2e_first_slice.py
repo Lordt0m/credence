@@ -70,13 +70,21 @@ def test_console_script_entry_point(tmp_path):
 
     output_dir = tmp_path / "output_script"
 
-    # Locate the installed console script executable in virtual environment
-    venv_bin = Path(sys.executable).parent
-    credence_bin = venv_bin / "credence"
-    if not credence_bin.exists():
-        credence_bin = venv_bin / "credence.exe"
+    # Locate the installed console script executable via PATH or python directory
+    credence_bin = shutil.which("credence")
+    if not credence_bin:
+        venv_bin = Path(sys.executable).parent
+        for candidate in (
+            venv_bin / "credence",
+            venv_bin / "credence.exe",
+            venv_bin / "Scripts" / "credence",
+            venv_bin / "Scripts" / "credence.exe",
+        ):
+            if candidate.exists():
+                credence_bin = str(candidate)
+                break
 
-    assert credence_bin.exists(), f"Console script {credence_bin} not found"
+    assert credence_bin is not None and Path(credence_bin).exists(), "Console script 'credence' not found in PATH or environment"
 
     cmd = [str(credence_bin), "check", str(input_csv), "--output-dir", str(output_dir)]
     result = subprocess.run(cmd, capture_output=True, text=True)

@@ -1,20 +1,25 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 3 complete (Complete validation semantics).
+- Phase: Phase 4 complete (Complete safe reporting and CLI).
 - Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
 
 ## Last verified result
-- 19 automated tests passing in `.venv` with pytest.
-- Strict header validation, column order permutation support, UTF-8 BOM stripping, CRLF/LF line endings, and physical line number preservation fully implemented and tested.
-- All field validation rules verified: ISO date calendar verification, type normalization (`income`/`expense`), positive decimal amounts with at most 2 decimal places and no currency signs/symbols/commas, required text fields, and optional reference.
-- Whole-file duplicate ID invalidation verified (every duplicate occurrence invalidated, including first occurrence).
-- Row error accumulation verified.
+- 25 automated unit and integration tests passing in `.venv` with pytest.
+- Full output pipeline verified:
+  - `clean-transactions.csv`: canonical header order, normalized rows, two-decimal amount formatting.
+  - `validation-errors.csv`: stable error codes, source line tracking, deterministic line/field sorting.
+  - `summary.json`: strict NGN currency label, valid-only calculations, two-decimal string serialization, case-insensitive sorted categories.
+- Output safety verified:
+  - Pre-flight collision prevention rejects existing artifacts with exit code 2 and leaves destination directory unmodified.
+  - Temporary staging guarantees atomic output creation and cleans up without partial artifacts upon write failure.
+- Deterministic repeated output verified (byte-identical artifacts across separate runs on identical input).
+- Clean CLI exit codes (0, 1, 2) and clean stderr diagnostics verified without Python tracebacks.
 
 ## Known risks
-- Output safety integration tests (atomic staging, collision handling with exit code 2, simulated write failure) need verification in Phase 4.
-- Demonstration datasets and documentation (Phase 5) and public GitHub publication (Phase 7) remain.
+- Realistic demonstration fixtures (`fixtures/valid_cashbook.csv`, `fixtures/mixed_cashbook.csv`, and canonical `fixtures/expected_mixed_output/`) and production `README.md` must be constructed in Phase 5.
+- Remote GitHub publication and CI setup pending (Phases 6 and 7).
 
 ## Next safe action
-- Commit Phase 3.
-- Begin Phase 4: Implement and test complete safe reporting, atomic staging, collision prevention, CLI integration, and exit codes (0, 1, 2).
+- Commit Phase 4.
+- Begin Phase 5: Author fictional demonstration data fixtures, expected mixed-result artifacts, and comprehensive user-facing `README.md`.

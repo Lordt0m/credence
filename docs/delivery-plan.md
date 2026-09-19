@@ -40,16 +40,16 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit Phase 3.
 
 ## Phase 4: Complete safe reporting and CLI
-- [ ] Implement deterministic `clean-transactions.csv` writer with canonical headers and 2-decimal amounts.
-- [ ] Implement deterministic `validation-errors.csv` writer sorted by line number and field.
-- [ ] Implement `summary.json` generation with exact decimal serialization as strings, sorted categories, and correct valid-only aggregates.
-- [ ] Implement output safety: check for existing target artifacts before execution; abort with exit code 2 if collision detected.
-- [ ] Implement staged output writing to guarantee atomic artifact publishing and cleanup on error.
-- [ ] Implement terminal summary output matching specification.
-- [ ] Implement exit code semantics: 0 for all-valid, 1 for row errors, 2 for file/safety errors.
-- [ ] Ensure absence of Python tracebacks for all operational errors.
-- [ ] Integration tests covering simulated write failure, duplicate protection, and collision checks.
-- [ ] Commit Phase 4.
+- [x] Implement deterministic `clean-transactions.csv` writer with canonical headers and 2-decimal amounts.
+- [x] Implement deterministic `validation-errors.csv` writer sorted by line number and field.
+- [x] Implement `summary.json` generation with exact decimal serialization as strings, sorted categories, and correct valid-only aggregates.
+- [x] Implement output safety: check for existing target artifacts before execution; abort with exit code 2 if collision detected.
+- [x] Implement staged output writing to guarantee atomic artifact publishing and cleanup on error.
+- [x] Implement terminal summary output matching specification.
+- [x] Implement exit code semantics: 0 for all-valid, 1 for row errors, 2 for file/safety errors.
+- [x] Ensure absence of Python tracebacks for all operational errors.
+- [x] Integration tests covering simulated write failure, duplicate protection, and collision checks.
+- [x] Commit Phase 4.
 
 ## Phase 5: Demonstration data and public documentation
 - [ ] Create fictional valid cashbook fixture (`fixtures/valid_cashbook.csv`).

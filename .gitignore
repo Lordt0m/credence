@@ -1,0 +1,34 @@
+# Python byte-code and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Build and packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Testing and coverage
+.coverage
+htmlcov/
+
+# Editor and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Credence run outputs (ignored if run locally during testing outside designated fixtures)
+/output/

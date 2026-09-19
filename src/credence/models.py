@@ -14,7 +14,6 @@ class TransactionType(str, Enum):
 class SourceRow:
     line_number: int
     raw_values: dict[str, str]
-    is_blank: bool = False
 
 
 @dataclass(frozen=True)

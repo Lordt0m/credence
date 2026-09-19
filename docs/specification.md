@@ -58,12 +58,14 @@ The first non-blank line of the CSV must be the header. The header must contain 
 - `reference`
 
 **File-level failure conditions**:
+- Header column names contain leading or trailing whitespace (names must match canonical lowercase ASCII names exactly).
+- Structurally unparseable or malformed CSV quoting (e.g., unclosed quotes or syntax violations).
 - Header contains missing required columns.
 - Header contains unknown/extra columns.
 - Header contains duplicate column names.
 - File is empty (zero bytes or only blank lines).
 
-Any header violation halts execution before row validation, produces no output artifacts, and returns exit code `2`.
+Any header violation or structural quoting failure halts execution before or during row ingestion, produces no output artifacts, and returns exit code `2`.
 
 ## 4. Row validation semantics
 
@@ -133,10 +135,11 @@ JSON payload summarizing file metrics and financial totals derived exclusively f
   - `income_by_category`: object mapping category names to 2-decimal string amounts, sorted case-insensitively by category name.
   - `expenses_by_category`: object mapping category names to 2-decimal string amounts, sorted case-insensitively by category name.
 
-## 6. Output safety and atomic publication
+## 6. Output safety and staged publication
 
 1. **Collision prevention**: Before reading or processing rows, Credence checks if any of the target filenames already exist in the target `--output-dir`. If any target artifact exists, the command terminates with an error message and exit code `2`.
-2. **Staged writes**: During processing, artifacts are written to a temporary staging directory. Only after all rows are processed and all files written successfully are the artifacts moved to `--output-dir`. If an unexpected exception occurs during writing, temporary files are removed and the destination directory is left clean.
+2. **Staged writes and publication rollback**: During processing, artifacts are written to a temporary staging directory. Only after all rows are processed and all files written successfully are the artifacts moved to `--output-dir`. If publication of any target artifact fails due to a handled exception, Credence executes best-effort rollback, removing any target files newly published during that execution while preserving any pre-existing unrelated files in `--output-dir`.
+3. **Safety boundary**: Application-level guarantees cover handled exceptions and collision prevention. The CLI does not provide multi-file POSIX filesystem-level crash consistency across sudden power outages, OS crashes, or SIGKILL signals.
 
 ## 7. Terminal reporting and exit codes
 

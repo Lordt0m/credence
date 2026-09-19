@@ -159,3 +159,92 @@ def test_cli_expected_errors_exit_code_2_without_traceback(tmp_path, bad_args, e
     assert res.returncode == expected_code
     assert "Traceback" not in res.stderr
     assert error_substring in res.stderr
+
+
+def test_publication_failure_rolls_back_published_artifacts(tmp_path, monkeypatch):
+    import shutil
+    import credence.reporting
+    from credence.constants import (
+        CLEAN_TRANSACTIONS_FILENAME,
+        SUMMARY_JSON_FILENAME,
+        VALIDATION_ERRORS_FILENAME,
+    )
+
+    output_dir = tmp_path / "rollback_test"
+    output_dir.mkdir(parents=True)
+    unrelated_file = output_dir / "unrelated.txt"
+    unrelated_file.write_text("keep this file", encoding="utf-8")
+
+    result = ValidationResult(processed_rows=1, valid_rows=1)
+    result.valid_transactions.append(
+        Transaction("T1", date(2026, 1, 1), TransactionType.INCOME, "Sales", "Desc", Decimal("50.00"), "")
+    )
+    summary = calculate_summary("test.csv", result)
+
+    real_move = shutil.move
+    def failing_move(src, dst):
+        if Path(dst).name == VALIDATION_ERRORS_FILENAME:
+            raise OSError("Simulated disk error during publication")
+        return real_move(src, dst)
+
+    monkeypatch.setattr(credence.reporting.shutil, "move", failing_move)
+
+    with pytest.raises((OutputSafetyError, OSError), match="Simulated disk error"):
+        stage_and_publish_reports(output_dir, result, summary)
+
+    # All target artifacts must be rolled back
+    assert not (output_dir / CLEAN_TRANSACTIONS_FILENAME).exists(), "clean-transactions.csv was not rolled back"
+    assert not (output_dir / VALIDATION_ERRORS_FILENAME).exists()
+    assert not (output_dir / SUMMARY_JSON_FILENAME).exists()
+    # Unrelated file must remain untouched
+    assert unrelated_file.read_text(encoding="utf-8") == "keep this file"
+
+
+def test_malformed_csv_quoting_cli_exit_code_2_no_artifacts(tmp_path):
+    input_csv = tmp_path / "malformed_quote.csv"
+    input_csv.write_text(
+        'transaction_id,date,type,category,description,amount,reference\n'
+        'TX1,2026-01-01,income,Sales,"unclosed description,100.00,REF1\n',
+        encoding="utf-8"
+    )
+    output_dir = tmp_path / "malformed_output"
+
+    cmd = [sys.executable, "-m", "credence", "check", str(input_csv), "-o", str(output_dir)]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+
+    assert res.returncode == 2
+    assert "Traceback" not in res.stderr
+    assert "Malformed CSV" in res.stderr
+    if output_dir.exists():
+        for name in TARGET_ARTIFACTS:
+            assert not (output_dir / name).exists()
+
+
+def test_cli_unexpected_programming_defect_surfaces_traceback(tmp_path):
+    input_csv = tmp_path / "valid.csv"
+    input_csv.write_text(
+        "transaction_id,date,type,category,description,amount,reference\n"
+        "TX1,2026-01-01,income,Sales,Widget,100.00,REF1\n",
+        encoding="utf-8"
+    )
+    output_dir = tmp_path / "bug_output"
+
+    # Run Python code that patches validate_cashbook to raise an unexpected defect
+    runner_code = (
+        "import sys\n"
+        "from unittest.mock import patch\n"
+        "import credence.cli\n"
+        "def buggy_validator(*args, **kwargs):\n"
+        "    raise ZeroDivisionError('simulated unexpected programming bug')\n"
+        "with patch('credence.cli.validate_cashbook', side_effect=buggy_validator):\n"
+        f"    sys.exit(credence.cli.main(['check', r'{str(input_csv)}', '-o', r'{str(output_dir)}']))\n"
+    )
+    cmd = [sys.executable, "-c", runner_code]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+
+    # Must NOT be converted to exit code 2
+    assert res.returncode != 2
+    assert res.returncode != 0
+    # Traceback must remain visible
+    assert "Traceback (most recent call last)" in res.stderr
+    assert "ZeroDivisionError: simulated unexpected programming bug" in res.stderr

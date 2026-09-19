@@ -40,11 +40,31 @@ def test_validate_header_valid_permuted():
         (["transaction_id", "date", "type", "category", "description", "amount", "amount"], "duplicate columns"),
         (["Transaction_Id", "date", "type", "category", "description", "amount", "reference"], "missing required columns"),
         (["", "date", "type", "category", "description", "amount", "reference"], "empty column names"),
+        ([" transaction_id", "date", "type", "category", "description", "amount", "reference"], "missing required columns"),
+        (["transaction_id", "date ", "type", "category", "description", "amount", "reference"], "missing required columns"),
     ],
 )
 def test_validate_header_invalid(invalid_header, err_snippet):
     with pytest.raises(FileValidationError, match=err_snippet):
         validate_header(invalid_header)
+
+
+def test_malformed_csv_quoting_raises_file_validation_error():
+    # Unclosed quote
+    unclosed_csv = (
+        'transaction_id,date,type,category,description,amount,reference\n'
+        'TX1,2026-01-01,income,Sales,"unclosed quote,100.00,REF1\n'
+    )
+    with pytest.raises(FileValidationError, match="[Mm]alformed CSV"):
+        read_source_rows(io.StringIO(unclosed_csv))
+
+    # Broken quote syntax
+    broken_quote_csv = (
+        'transaction_id,date,type,category,description,amount,reference\n'
+        'TX1,2026-01-01,income,Sales,"broken"quote,100.00,REF1\n'
+    )
+    with pytest.raises(FileValidationError, match="[Mm]alformed CSV"):
+        read_source_rows(io.StringIO(broken_quote_csv))
 
 
 def test_read_source_rows_preserves_physical_lines_and_ignores_blanks():

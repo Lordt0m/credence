@@ -84,7 +84,7 @@ Credence accepts UTF-8 encoded CSV files (with an optional UTF-8 Byte Order Mark
 | `reference` | Optional free-form string. An empty or omitted value is valid. | None |
 
 ### Structural rules
-- **Header errors**: Missing, extra, or duplicated columns halt execution immediately before record processing with exit code `2`.
+- **Header and structural errors**: Missing, extra, whitespace-padded, or duplicated header columns, as well as structurally unparseable CSV quoting, halt execution immediately with exit code `2`.
 - **Blank lines**: Empty or whitespace-only lines are ignored and do not affect record counts or physical line tracking.
 - **Physical line numbers**: Error diagnostics track 1-indexed physical file lines.
 - **Row width mismatch**: If a row contains more or fewer columns than the header, it is flagged with `ERR_ROW_WIDTH_MISMATCH`, excluded from valid transactions, and companion valid rows remain eligible for reporting.
@@ -172,7 +172,7 @@ Because line 9 has issues, it is excluded from `clean-transactions.csv` and its 
 |---|---|---|
 | `0` | Clean validation: all rows passed; full reports generated. | Written |
 | `1` | Row issues detected: one or more rows were invalid; diagnostics and valid row summaries generated. | Written |
-| `2` | File, argument, header, or safety collision error: execution halted before row processing. | Not written |
+| `2` | File, argument, header, malformed CSV quoting, or safety collision error: execution halted; no output artifacts generated. | Not written |
 
 ---
 
@@ -181,7 +181,7 @@ Because line 9 has issues, it is excluded from `clean-transactions.csv` and its 
 - **Zero runtime dependencies**: Built exclusively on the Python 3.13 standard library (`argparse`, `csv`, `dataclasses`, `datetime`, `decimal`, `enum`, `json`, `pathlib`, `tempfile`, `shutil`). See [ADR 0001](docs/adr/0001-standard-library-runtime.md).
 - **Exact decimal arithmetic**: Never uses `float` for money. Amounts and totals are parsed and aggregated using `decimal.Decimal` and serialized as two-decimal strings (`"0.00"`).
 - **Whole-file duplicate rejection**: Duplicate transaction IDs cannot be safely resolved by accepting the first record. All instances sharing an ID are rejected. See [ADR 0002](docs/adr/0002-whole-file-duplicate-validation.md).
-- **Staged atomic output and collision prevention**: Credence refuses to overwrite existing target files in `--output-dir`. Artifacts are generated in a temporary staging directory and published atomically to ensure no partial files are left upon interruption or failure. See [ADR 0003](docs/adr/0003-safe-deterministic-staged-output.md).
+- **Staged output safety, collision prevention, and rollback**: Credence refuses to overwrite existing target files in `--output-dir`. Artifacts are staged in an isolated temporary directory and published to the destination, with best-effort rollback of newly moved artifacts upon handled operational errors. See [ADR 0003](docs/adr/0003-safe-deterministic-staged-output.md).
 
 ---
 

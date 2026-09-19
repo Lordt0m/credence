@@ -11,7 +11,7 @@ A simple income-and-expense ledger exported or assembled by a small business in 
 An unvalidated row parsed from an input cashbook CSV. It preserves:
 - The physical 1-indexed source line number in the CSV file.
 - The raw text strings parsed from the file columns.
-- Any blank row status (fully blank rows are ignored and omitted from record counting).
+- Only non-blank rows are ingested (fully blank rows are skipped during reading and omitted from record counting).
 
 ### Transaction
 A fully validated, normalized business transaction record consisting of:

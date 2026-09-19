@@ -1,9 +1,14 @@
 import argparse
+import csv
 import sys
 from pathlib import Path
 
 from credence.models import FinancialSummary, ValidationResult
-from credence.reporting import OutputSafetyError, stage_and_publish_reports
+from credence.reporting import (
+    OutputSafetyError,
+    check_output_safety,
+    stage_and_publish_reports,
+)
 from credence.validator import FileValidationError, read_source_rows, validate_cashbook
 
 
@@ -45,10 +50,12 @@ def run_check(input_path_str: str, output_dir_str: str) -> int:
 
     # 2. Output directory pre-flight safety check
     try:
-        from credence.reporting import check_output_safety
         check_output_safety(output_dir)
     except OutputSafetyError as e:
         sys.stderr.write(f"Error: {e}\n")
+        return 2
+    except OSError as e:
+        sys.stderr.write(f"Error checking output directory: {e}\n")
         return 2
 
     # 3. Read and parse CSV with UTF-8 encoding
@@ -61,7 +68,7 @@ def run_check(input_path_str: str, output_dir_str: str) -> int:
     except FileValidationError as e:
         sys.stderr.write(f"Error: {e}\n")
         return 2
-    except Exception as e:
+    except (csv.Error, OSError) as e:
         sys.stderr.write(f"Error reading source file: {e}\n")
         return 2
 
@@ -78,7 +85,7 @@ def run_check(input_path_str: str, output_dir_str: str) -> int:
     except OutputSafetyError as e:
         sys.stderr.write(f"Error: {e}\n")
         return 2
-    except Exception as e:
+    except OSError as e:
         sys.stderr.write(f"Error writing reports: {e}\n")
         return 2
 

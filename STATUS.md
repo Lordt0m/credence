@@ -1,27 +1,24 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Public build complete; independent review repairs open.
+- Phase: Independent review repairs implemented and verified locally; awaiting public push and CI confirmation.
 - Repository: repository root on branch `main`.
 - Remote: `https://github.com/Lordt0m/credence`.
 
 ## Last verified result
-- 27 automated unit, integration, and demonstration tests passing locally and in public CI.
-- GitHub Actions CI matrix (Python 3.13 on `ubuntu-latest` and `windows-latest`) passing green (Run ID: 35417227728).
-- Complete MVP acceptance gate met:
-  1. Standard library runtime with zero external runtime dependencies.
-  2. Strict header contract validation, column permutation tolerance, and physical line tracking.
-  3. All field validations (ISO date, type normalization, positive decimal amounts, required strings, optional reference) and whole-file duplicate rejection verified.
-  4. Staged output safety, collision prevention (exit code 2), and simulated write cleanup verified.
-  5. Deterministic outputs (`clean-transactions.csv`, `validation-errors.csv`, `summary.json`) matching canonical fixtures byte-for-byte.
-  6. Clean CLI exit codes (0, 1, 2) without Python tracebacks.
-  7. Public documentation, specifications, ADRs, workflows, and demonstration datasets aligned.
+- 33 automated unit, integration, and demonstration tests passing locally across Python 3.13.
+- All independent review findings addressed test-first:
+  1. Publication rollback implemented: Handled publication failures roll back all newly published target artifacts while leaving pre-existing unrelated files untouched.
+  2. Documentation updated to specify exact guarantees (staged writing, collision refusal, best-effort rollback on handled exceptions) and explicit boundaries (no claims of multi-file POSIX crash consistency across power loss or SIGKILL).
+  3. Strict CSV quoting enforced: Structurally unparseable CSV quoting triggers concise `FileValidationError`, exit code `2`, and zero output artifacts.
+  4. Exact header validation enforced: Rejects leading and trailing whitespace around column names while preserving column permutation support.
+  5. CLI exception handling narrowed to expected operational errors (`FileValidationError`, `OutputSafetyError`, `OSError`, `UnicodeDecodeError`, `csv.Error`), ensuring programming defects surface tracebacks.
+  6. Unused `SourceRow.is_blank` removed from models and documentation.
+  7. GitHub Actions workflow modernized to official `v7` actions (`actions/checkout@v7`, `actions/setup-python@v7`), eliminating Node.js 20 deprecation warnings.
+- Fictional demonstration fixture validation and canonical byte-for-byte reconciliation confirmed.
 
 ## Known risks
-- Independent review found that sequential artifact publication can leave partial output if a later move fails.
-- Broad CLI exception handling hides unexpected programming defects.
-- Malformed CSV quoting and whitespace-decorated headers do not yet follow the exact file contract.
-- Public CI passes but its action versions emit Node.js deprecation warnings.
+- Multi-file filesystem consistency across sudden power loss, kernel panics, or SIGKILL is outside standard application-level boundaries without transaction-capable filesystem support; this boundary is explicitly documented.
 
 ## Next safe action
-- Repair the independent review findings test-first, align documentation with actual guarantees, and obtain a fresh green public CI run.
+- Push repairs to `origin/main` and verify that GitHub Actions CI matrix passes green on both Ubuntu and Windows runners.

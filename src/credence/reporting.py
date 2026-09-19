@@ -99,8 +99,19 @@ def stage_and_publish_reports(
         # Ensure target directory exists
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Move staged files into output_dir
-        for name in TARGET_ARTIFACTS:
-            src_file = stage_path / name
-            dst_file = output_dir / name
-            shutil.move(str(src_file), str(dst_file))
+        # Move staged files into output_dir with rollback on publication failure
+        published_files: list[Path] = []
+        try:
+            for name in TARGET_ARTIFACTS:
+                src_file = stage_path / name
+                dst_file = output_dir / name
+                shutil.move(str(src_file), str(dst_file))
+                published_files.append(dst_file)
+        except Exception as exc:
+            for published in published_files:
+                try:
+                    if published.exists():
+                        published.unlink()
+                except OSError:
+                    pass
+            raise OutputSafetyError(f"Failed to publish output artifacts: {exc}") from exc

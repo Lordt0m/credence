@@ -38,33 +38,32 @@ def validate_header(header: list[str]) -> list[str]:
     """
     Validate the CSV header line.
     Must contain exactly the 7 canonical column names in lowercase ASCII.
-    Can be in any column order.
+    Can be in any column order. Whitespace around column names is rejected.
     """
     if not header:
         raise FileValidationError("CSV file is empty or has no header.")
 
     # Check for empty column names
-    cleaned = [col.strip() for col in header]
-    if any(not col for col in cleaned):
+    if any(not col.strip() for col in header):
         raise FileValidationError("CSV header contains empty column names.")
 
     # Check for duplicates
-    if len(cleaned) != len(set(cleaned)):
-        duplicates = [col for col in cleaned if cleaned.count(col) > 1]
+    if len(header) != len(set(header)):
+        duplicates = [col for col in header if header.count(col) > 1]
         raise FileValidationError(f"CSV header contains duplicate columns: {', '.join(set(duplicates))}")
 
-    cleaned_set = set(cleaned)
+    header_set = set(header)
     canonical_set = set(CANONICAL_COLUMNS)
 
-    missing = canonical_set - cleaned_set
+    missing = canonical_set - header_set
     if missing:
         raise FileValidationError(f"CSV header is missing required columns: {', '.join(sorted(missing))}")
 
-    extra = cleaned_set - canonical_set
+    extra = header_set - canonical_set
     if extra:
         raise FileValidationError(f"CSV header contains unexpected columns: {', '.join(sorted(extra))}")
 
-    return cleaned
+    return list(header)
 
 
 def read_source_rows(stream: TextIO) -> tuple[list[str], list[SourceRow]]:
@@ -87,7 +86,10 @@ def read_source_rows(stream: TextIO) -> tuple[list[str], list[SourceRow]]:
     for idx, line in enumerate(raw_lines, start=1):
         if line.strip():
             header_line_index = idx
-            parsed_header = list(csv.reader([line]))
+            try:
+                parsed_header = list(csv.reader([line], strict=True))
+            except csv.Error as e:
+                raise FileValidationError(f"Malformed CSV: {e}") from e
             if not parsed_header or not parsed_header[0]:
                 raise FileValidationError("Unable to parse CSV header.")
             header = validate_header(parsed_header[0])
@@ -104,7 +106,10 @@ def read_source_rows(stream: TextIO) -> tuple[list[str], list[SourceRow]]:
             # Fully blank row ignored
             continue
 
-        parsed = list(csv.reader([line]))
+        try:
+            parsed = list(csv.reader([line], strict=True))
+        except csv.Error as e:
+            raise FileValidationError(f"Malformed CSV: {e}") from e
         if not parsed:
             continue
         row_values = parsed[0]

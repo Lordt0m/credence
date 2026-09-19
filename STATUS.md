@@ -1,22 +1,18 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 5 complete (Demonstration data and public documentation).
+- Phase: Phase 6 complete (Public CI and release verification).
 - Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
 
 ## Last verified result
-- 27 automated tests passing in `.venv` with pytest.
-- Fictional demonstration fixtures committed in `fixtures/`:
-  - `fixtures/valid_cashbook.csv`: 10 rows spanning Jan-Feb 2026 across 6 business categories.
-  - `fixtures/mixed_cashbook.csv`: 10 processed rows with 4 valid rows and 6 invalid rows demonstrating duplicate identifiers, column count mismatch, invalid amounts, invalid dates, and multiple row-level errors.
-  - `fixtures/expected_mixed_output/`: Canonical `clean-transactions.csv`, `validation-errors.csv`, and `summary.json`.
-- Demonstration reproduction test (`tests/test_demonstration.py`) proves fresh runs reproduce committed demonstration artifacts byte-for-byte.
-- Comprehensive user-facing `README.md` complete with problem framing, copyable PowerShell and POSIX demonstration commands, input schema table, output formats, exit codes, architecture rationale, and test execution guide.
+- 27 automated tests passing across multiple execution environments (active `.venv` and an isolated clean temporary virtual environment).
+- CI workflow `.github/workflows/ci.yml` authored targeting official actions (`actions/checkout@v4`, `actions/setup-python@v5`), Python 3.13 on both Ubuntu and Windows matrix, executing test suite, verifying both CLI entry points, and enforcing clean git state.
+- `git diff --check` passed cleanly with no whitespace or encoding anomalies.
+- Repository checked for secrets, absolute paths, and stale artifacts. Working tree is clean.
 
 ## Known risks
-- GitHub Actions CI workflow must be authored and verified before remote publication.
-- Public GitHub repository creation and push pending in Phase 7.
+- GitHub CLI (`gh`) is not installed locally; remote publication will be handled via Git and GitHub API.
 
 ## Next safe action
-- Commit Phase 5.
-- Begin Phase 6: Author GitHub Actions CI workflow `.github/workflows/ci.yml`, verify complete local release gate, and check repository cleanliness.
+- Commit Phase 6.
+- Begin Phase 7: Publish to GitHub (`https://github.com/Lordt0m/credence`), push `main`, verify public CI run, and compile the final return report.

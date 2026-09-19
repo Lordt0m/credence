@@ -60,12 +60,12 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit Phase 5.
 
 ## Phase 6: Public CI and release verification
-- [ ] Author GitHub Actions workflow `.github/workflows/ci.yml` running on Python 3.13.
-- [ ] Workflow steps: install dependencies, run test suite, test both entry points, verify demonstration outputs.
-- [ ] Run complete local release verification in clean virtual environment.
-- [ ] Check `git diff --check` and clean working tree.
-- [ ] Update `STATUS.md`.
-- [ ] Commit Phase 6.
+- [x] Author GitHub Actions workflow `.github/workflows/ci.yml` running on Python 3.13.
+- [x] Workflow steps: install dependencies, run test suite, test both entry points, verify demonstration outputs.
+- [x] Run complete local release verification in clean virtual environment.
+- [x] Check `git diff --check` and clean working tree.
+- [x] Update `STATUS.md`.
+- [x] Commit Phase 6.
 
 ## Phase 7: GitHub publication and release
 - [ ] Create public GitHub repository `Lordt0m/credence`.

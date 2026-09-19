@@ -1,8 +1,8 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 7 complete (Public GitHub publication and release verified).
-- Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
+- Phase: Public build complete; independent review repairs open.
+- Repository: repository root on branch `main`.
 - Remote: `https://github.com/Lordt0m/credence`.
 
 ## Last verified result
@@ -18,7 +18,10 @@
   7. Public documentation, specifications, ADRs, workflows, and demonstration datasets aligned.
 
 ## Known risks
-- None identified. All MVP requirements and completion criteria are satisfied and evidenced.
+- Independent review found that sequential artifact publication can leave partial output if a later move fails.
+- Broad CLI exception handling hides unexpected programming defects.
+- Malformed CSV quoting and whitespace-decorated headers do not yet follow the exact file contract.
+- Public CI passes but its action versions emit Node.js deprecation warnings.
 
 ## Next safe action
-- Deliver final primary-builder handoff report.
+- Repair the independent review findings test-first, align documentation with actual guarantees, and obtain a fresh green public CI run.

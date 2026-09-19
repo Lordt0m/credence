@@ -1,19 +1,20 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 2 complete (Package structure and first vertical slice).
+- Phase: Phase 3 complete (Complete validation semantics).
 - Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
 
 ## Last verified result
-- `pyproject.toml` established targeting Python 3.13, console script `credence`, and pytest dev dependency.
-- Package layout established in `src/credence/` (`models.py`, `constants.py`, `validator.py`, `reporting.py`, `cli.py`, `__main__.py`, `__init__.py`).
-- Virtual environment `.venv` configured and package installed in editable mode.
-- End-to-end test suite (`tests/test_e2e_first_slice.py`) passing: 2 tests passed verifying both `python -m credence` and console script `credence` generate `clean-transactions.csv`, `validation-errors.csv`, and `summary.json` with correct NGN totals and exit code 0.
+- 19 automated tests passing in `.venv` with pytest.
+- Strict header validation, column order permutation support, UTF-8 BOM stripping, CRLF/LF line endings, and physical line number preservation fully implemented and tested.
+- All field validation rules verified: ISO date calendar verification, type normalization (`income`/`expense`), positive decimal amounts with at most 2 decimal places and no currency signs/symbols/commas, required text fields, and optional reference.
+- Whole-file duplicate ID invalidation verified (every duplicate occurrence invalidated, including first occurrence).
+- Row error accumulation verified.
 
 ## Known risks
-- Full edge-case validation (row width mismatch, duplicate IDs, invalid dates/types/amounts, BOM, CRLF, blank lines) needs complete test coverage and verification in Phase 3.
-- Remote GitHub repo creation still pending (Phase 7).
+- Output safety integration tests (atomic staging, collision handling with exit code 2, simulated write failure) need verification in Phase 4.
+- Demonstration datasets and documentation (Phase 5) and public GitHub publication (Phase 7) remain.
 
 ## Next safe action
-- Commit Phase 2.
-- Begin Phase 3: Implement and test complete validation semantics (strict header contract, all field-level rules, error accumulation, duplicate pass, physical line number preservation).
+- Commit Phase 3.
+- Begin Phase 4: Implement and test complete safe reporting, atomic staging, collision prevention, CLI integration, and exit codes (0, 1, 2).

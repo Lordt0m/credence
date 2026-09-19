@@ -23,21 +23,21 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit Phase 2.
 
 ## Phase 3: Complete validation semantics
-- [ ] Implement strict header validation (exact 7 fields, case sensitivity, column order tolerance).
-- [ ] Implement UTF-8 BOM stripping and line ending support (LF/CRLF).
-- [ ] Implement physical line number tracking and blank line skipping.
-- [ ] Implement row width mismatch detection (`ERR_ROW_WIDTH_MISMATCH`).
-- [ ] Implement field-level validators with stable error codes:
+- [x] Implement strict header validation (exact 7 fields, case sensitivity, column order tolerance).
+- [x] Implement UTF-8 BOM stripping and line ending support (LF/CRLF).
+- [x] Implement physical line number tracking and blank line skipping.
+- [x] Implement row width mismatch detection (`ERR_ROW_WIDTH_MISMATCH`).
+- [x] Implement field-level validators with stable error codes:
   - `date`: ISO calendar date (`ERR_INVALID_DATE`).
   - `type`: `income`/`expense` case-insensitive normalization (`ERR_INVALID_TYPE`).
   - `category`: non-empty trimmed text (`ERR_REQUIRED_FIELD`).
   - `description`: non-empty trimmed text (`ERR_REQUIRED_FIELD`).
   - `amount`: strictly positive decimal with at most 2 fractional digits (`ERR_INVALID_AMOUNT`).
   - `reference`: optional text handling.
-- [ ] Implement whole-file case-insensitive duplicate transaction ID validation (`ERR_DUPLICATE_ID`) that invalidates all occurrences.
-- [ ] Accumulate all detectable errors per row.
-- [ ] Write comprehensive unit tests for all boundary conditions and rules.
-- [ ] Commit Phase 3.
+- [x] Implement whole-file case-insensitive duplicate transaction ID validation (`ERR_DUPLICATE_ID`) that invalidates all occurrences.
+- [x] Accumulate all detectable errors per row.
+- [x] Write comprehensive unit tests for all boundary conditions and rules.
+- [x] Commit Phase 3.
 
 ## Phase 4: Complete safe reporting and CLI
 - [ ] Implement deterministic `clean-transactions.csv` writer with canonical headers and 2-decimal amounts.

@@ -14,13 +14,13 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit baseline contract.
 
 ## Phase 2: Package structure and first vertical slice
-- [ ] Define `pyproject.toml` targeting Python 3.13, console script `credence`, and `pytest` dev dependency.
-- [ ] Set up local virtual environment `.venv` and install package in editable mode with dev tools.
-- [ ] Implement core package layout in `src/credence/` (`__init__.py`, `__main__.py`, `cli.py`, `models.py`).
-- [ ] Write failing end-to-end integration test asserting valid cashbook parsing and artifact writing.
-- [ ] Implement narrow end-to-end path writing `clean-transactions.csv`, `validation-errors.csv`, and `summary.json`.
-- [ ] Verify both `credence check` and `python -m credence check` work equivalently with exit code 0.
-- [ ] Commit Phase 2.
+- [x] Define `pyproject.toml` targeting Python 3.13, console script `credence`, and `pytest` dev dependency.
+- [x] Set up local virtual environment `.venv` and install package in editable mode with dev tools.
+- [x] Implement core package layout in `src/credence/` (`__init__.py`, `__main__.py`, `cli.py`, `models.py`).
+- [x] Write failing end-to-end integration test asserting valid cashbook parsing and artifact writing.
+- [x] Implement narrow end-to-end path writing `clean-transactions.csv`, `validation-errors.csv`, and `summary.json`.
+- [x] Verify both `credence check` and `python -m credence check` work equivalently with exit code 0.
+- [x] Commit Phase 2.
 
 ## Phase 3: Complete validation semantics
 - [ ] Implement strict header validation (exact 7 fields, case sensitivity, column order tolerance).

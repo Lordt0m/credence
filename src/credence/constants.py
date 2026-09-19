@@ -1,0 +1,28 @@
+CANONICAL_COLUMNS = [
+    "transaction_id",
+    "date",
+    "type",
+    "category",
+    "description",
+    "amount",
+    "reference",
+]
+
+# Error codes
+ERR_REQUIRED_FIELD = "ERR_REQUIRED_FIELD"
+ERR_INVALID_DATE = "ERR_INVALID_DATE"
+ERR_INVALID_TYPE = "ERR_INVALID_TYPE"
+ERR_INVALID_AMOUNT = "ERR_INVALID_AMOUNT"
+ERR_DUPLICATE_ID = "ERR_DUPLICATE_ID"
+ERR_ROW_WIDTH_MISMATCH = "ERR_ROW_WIDTH_MISMATCH"
+
+# Artifact filenames
+CLEAN_TRANSACTIONS_FILENAME = "clean-transactions.csv"
+VALIDATION_ERRORS_FILENAME = "validation-errors.csv"
+SUMMARY_JSON_FILENAME = "summary.json"
+
+TARGET_ARTIFACTS = [
+    CLEAN_TRANSACTIONS_FILENAME,
+    VALIDATION_ERRORS_FILENAME,
+    SUMMARY_JSON_FILENAME,
+]

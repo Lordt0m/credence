@@ -1,12 +1,13 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Independent review repairs implemented and verified locally; awaiting public push and CI confirmation.
+- Phase: Independent review repairs complete and verified in public CI.
 - Repository: repository root on branch `main`.
 - Remote: `https://github.com/Lordt0m/credence`.
 
 ## Last verified result
-- 33 automated unit, integration, and demonstration tests passing locally across Python 3.13.
+- 33 automated unit, integration, and demonstration tests passing locally across Python 3.13 and in public CI.
+- GitHub Actions CI matrix (Python 3.13 on `ubuntu-latest` and `windows-latest`) passing green (Run ID: 35431469572).
 - All independent review findings addressed test-first:
   1. Publication rollback implemented: Handled publication failures roll back all newly published target artifacts while leaving pre-existing unrelated files untouched.
   2. Documentation updated to specify exact guarantees (staged writing, collision refusal, best-effort rollback on handled exceptions) and explicit boundaries (no claims of multi-file POSIX crash consistency across power loss or SIGKILL).
@@ -21,4 +22,4 @@
 - Multi-file filesystem consistency across sudden power loss, kernel panics, or SIGKILL is outside standard application-level boundaries without transaction-capable filesystem support; this boundary is explicitly documented.
 
 ## Next safe action
-- Push repairs to `origin/main` and verify that GitHub Actions CI matrix passes green on both Ubuntu and Windows runners.
+- Ready for reviewer evaluation and release tagging.

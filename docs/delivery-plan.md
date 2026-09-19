@@ -52,12 +52,12 @@ This document outlines the phased build sequence and explicit acceptance checks 
 - [x] Commit Phase 4.
 
 ## Phase 5: Demonstration data and public documentation
-- [ ] Create fictional valid cashbook fixture (`fixtures/valid_cashbook.csv`).
-- [ ] Create fictional mixed-quality cashbook fixture (`fixtures/mixed_cashbook.csv`) exercising all major error conditions.
-- [ ] Generate and commit canonical expected output artifacts for `mixed_cashbook.csv` (`fixtures/expected_mixed_output/`).
-- [ ] Author comprehensive `README.md` including problem context, one-command demonstration, installation, schema, outputs, exit codes, PowerShell and POSIX examples, architecture, and trade-offs.
-- [ ] Verify fresh clone reproducibility and exact match with expected output.
-- [ ] Commit Phase 5.
+- [x] Create fictional valid cashbook fixture (`fixtures/valid_cashbook.csv`).
+- [x] Create fictional mixed-quality cashbook fixture (`fixtures/mixed_cashbook.csv`) exercising all major error conditions.
+- [x] Generate and commit canonical expected output artifacts for `mixed_cashbook.csv` (`fixtures/expected_mixed_output/`).
+- [x] Author comprehensive `README.md` including problem context, one-command demonstration, installation, schema, outputs, exit codes, PowerShell and POSIX examples, architecture, and trade-offs.
+- [x] Verify fresh clone reproducibility and exact match with expected output.
+- [x] Commit Phase 5.
 
 ## Phase 6: Public CI and release verification
 - [ ] Author GitHub Actions workflow `.github/workflows/ci.yml` running on Python 3.13.

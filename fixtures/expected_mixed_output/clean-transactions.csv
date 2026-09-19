@@ -1,0 +1,5 @@
+transaction_id,date,type,category,description,amount,reference
+TX-MIX-001,2026-01-04,income,Sales,Retail clothing sales,75000.00,INV-001
+TX-MIX-002,2026-01-07,expense,Rent,Shop space rental,40000.00,REC-001
+TX-MIX-006,2026-02-02,expense,Utilities,Water bill payment,12000.00,REC-002
+TX-MIX-008,2026-02-19,expense,Logistics,Courier delivery dispatch,7500.50,DISP-88

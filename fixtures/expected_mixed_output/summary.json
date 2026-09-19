@@ -1,0 +1,21 @@
+{
+  "source_file": "mixed_cashbook.csv",
+  "currency": "NGN",
+  "processed_rows": 10,
+  "valid_rows": 4,
+  "invalid_rows": 6,
+  "error_count": 7,
+  "earliest_date": "2026-01-04",
+  "latest_date": "2026-02-19",
+  "total_income": "75000.00",
+  "total_expenses": "59500.50",
+  "net_cash_movement": "15499.50",
+  "income_by_category": {
+    "Sales": "75000.00"
+  },
+  "expenses_by_category": {
+    "Logistics": "7500.50",
+    "Rent": "40000.00",
+    "Utilities": "12000.00"
+  }
+}

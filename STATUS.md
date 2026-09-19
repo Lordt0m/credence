@@ -1,25 +1,22 @@
 # Project status: Credence
 
 ## Repository checkpoint
-- Phase: Phase 4 complete (Complete safe reporting and CLI).
+- Phase: Phase 5 complete (Demonstration data and public documentation).
 - Repository: `C:\Users\Lord\Documents\Codex\credence` (branch: `main`).
 
 ## Last verified result
-- 25 automated unit and integration tests passing in `.venv` with pytest.
-- Full output pipeline verified:
-  - `clean-transactions.csv`: canonical header order, normalized rows, two-decimal amount formatting.
-  - `validation-errors.csv`: stable error codes, source line tracking, deterministic line/field sorting.
-  - `summary.json`: strict NGN currency label, valid-only calculations, two-decimal string serialization, case-insensitive sorted categories.
-- Output safety verified:
-  - Pre-flight collision prevention rejects existing artifacts with exit code 2 and leaves destination directory unmodified.
-  - Temporary staging guarantees atomic output creation and cleans up without partial artifacts upon write failure.
-- Deterministic repeated output verified (byte-identical artifacts across separate runs on identical input).
-- Clean CLI exit codes (0, 1, 2) and clean stderr diagnostics verified without Python tracebacks.
+- 27 automated tests passing in `.venv` with pytest.
+- Fictional demonstration fixtures committed in `fixtures/`:
+  - `fixtures/valid_cashbook.csv`: 10 rows spanning Jan-Feb 2026 across 6 business categories.
+  - `fixtures/mixed_cashbook.csv`: 10 processed rows with 4 valid rows and 6 invalid rows demonstrating duplicate identifiers, column count mismatch, invalid amounts, invalid dates, and multiple row-level errors.
+  - `fixtures/expected_mixed_output/`: Canonical `clean-transactions.csv`, `validation-errors.csv`, and `summary.json`.
+- Demonstration reproduction test (`tests/test_demonstration.py`) proves fresh runs reproduce committed demonstration artifacts byte-for-byte.
+- Comprehensive user-facing `README.md` complete with problem framing, copyable PowerShell and POSIX demonstration commands, input schema table, output formats, exit codes, architecture rationale, and test execution guide.
 
 ## Known risks
-- Realistic demonstration fixtures (`fixtures/valid_cashbook.csv`, `fixtures/mixed_cashbook.csv`, and canonical `fixtures/expected_mixed_output/`) and production `README.md` must be constructed in Phase 5.
-- Remote GitHub publication and CI setup pending (Phases 6 and 7).
+- GitHub Actions CI workflow must be authored and verified before remote publication.
+- Public GitHub repository creation and push pending in Phase 7.
 
 ## Next safe action
-- Commit Phase 4.
-- Begin Phase 5: Author fictional demonstration data fixtures, expected mixed-result artifacts, and comprehensive user-facing `README.md`.
+- Commit Phase 5.
+- Begin Phase 6: Author GitHub Actions CI workflow `.github/workflows/ci.yml`, verify complete local release gate, and check repository cleanliness.

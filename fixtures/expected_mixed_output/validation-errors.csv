@@ -1,0 +1,8 @@
+line_number,transaction_id,field,error_code,message
+5,TX-MIX-003,amount,ERR_INVALID_AMOUNT,Amount '0.00' must be strictly positive (> 0).
+6,TX-MIX-004,transaction_id,ERR_DUPLICATE_ID,Duplicate transaction ID 'TX-MIX-004' (case-insensitive) appears 2 times.
+7,,row,ERR_ROW_WIDTH_MISMATCH,Row has 6 columns; expected 7.
+9,TX-MIX-007,description,ERR_REQUIRED_FIELD,Description is required and cannot be empty.
+9,TX-MIX-007,type,ERR_INVALID_TYPE,Type 'transfer' must be 'income' or 'expense'.
+10,tx-mix-004,transaction_id,ERR_DUPLICATE_ID,Duplicate transaction ID 'tx-mix-004' (case-insensitive) appears 2 times.
+12,TX-MIX-009,date,ERR_INVALID_DATE,Date '2026-02-29' is not a valid calendar date.

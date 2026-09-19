@@ -1,0 +1,11 @@
+transaction_id,date,type,category,description,amount,reference
+TX-2026-001,2026-01-05,income,Sales,Wholesale fabric order 104,185000.00,INV-104
+TX-2026-002,2026-01-08,expense,Rent,Monthly workshop lease,65000.00,LEASE-JAN
+TX-2026-003,2026-01-12,income,Consulting,Design advisory session,45000.00,CONS-01
+TX-2026-004,2026-01-18,expense,Utilities,Generator diesel supply,28500.00,REC-991
+TX-2026-005,2026-01-25,expense,Supplies,Sewing threads and buttons,14200.50,SUP-330
+TX-2026-006,2026-02-02,income,Sales,Custom bridal wear deposit,120000.00,INV-105
+TX-2026-007,2026-02-09,expense,Marketing,Social media promotion ads,18000.00,AD-FEB
+TX-2026-008,2026-02-15,expense,Maintenance,Sewing machine routine servicing,12500.00,SRV-02
+TX-2026-009,2026-02-20,income,Sales,Ready-to-wear boutique delivery,95000.00,INV-106
+TX-2026-010,2026-02-26,expense,Utilities,Internet subscription monthly,16500.00,ISP-FEB
